@@ -7,4 +7,5 @@ namespace Chattland.Api.DataAccess;
 public interface IChatMessageRepository : IRepository<ChatMessage, string>
 {
     void SetCollectionName(string name);
+    Task<IEnumerable<string>> GetRoomNames();
 }

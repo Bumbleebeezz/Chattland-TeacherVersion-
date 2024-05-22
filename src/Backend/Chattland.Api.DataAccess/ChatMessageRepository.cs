@@ -24,6 +24,12 @@ public class ChatMessageRepository : IChatMessageRepository
         return message;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="count">Count set to 0 get all remaining messages</param>
+    /// <returns>Collection of messages in specified range</returns>
     public async Task<IEnumerable<ChatMessage>> GetManyAsync(int start, int count)
     {
         var collection = _database.GetCollection<ChatMessage>(_collectionName);
@@ -47,5 +53,11 @@ public class ChatMessageRepository : IChatMessageRepository
     public void SetCollectionName(string name)
     {
         _collectionName = name;
+    }
+
+    public async Task<IEnumerable<string>> GetRoomNames()
+    {
+        var collections = await _database.ListCollectionNames().ToListAsync();
+        return collections;
     }
 }
