@@ -1,9 +1,8 @@
-﻿@page "/chat"
-@using Chattland.DataTransferContract.ChatContracts
+﻿@using Chattland.DataTransferContract.ChatContracts
 @using Chattland.DataTransferContract.DataTransferTypes
-@inject IHttpClientFactory _httpClientFactory
+@inject IHttpClientFactory HttpClientFactory
 
-<h3>Chat</h3>
+<h3>@Room</h3>
 
 <EditForm Model="newChatMessage" >
     <DataAnnotationsValidator />
@@ -30,21 +29,44 @@
 
 @code {
 
+    [Parameter]
+    public string Room
+    {
+        get => _room;
+        set
+        {
+            if (value.Equals(_room))
+            {
+                return;
+            }
+            _room = value;
+            GetMessages();
+        }
+    }
+
     public List<ChatMessageModel> Messages = new();
     public ChatMessageModel newChatMessage = new();
+    private string _room = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        var client = _httpClientFactory.CreateClient("chatApi");
-        var response = await client.GetAsync("/messages/Prutt?start=0&count=0");
+        await GetMessages();
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task GetMessages()
+    {
+        Messages.Clear();
+        var client = HttpClientFactory.CreateClient("chatApi");
+        var response = await client.GetAsync($"/messages/{Room}?start=0&count=0");
 
         if (response.IsSuccessStatusCode)
         {
             var messages = await response.Content.ReadFromJsonAsync<List<ChatMessageModel>>();
             Messages.AddRange(messages);
+            StateHasChanged();
         }
-
-        await base.OnInitializedAsync();
     }
 
     public class ChatMessageModel : IChatMessage
