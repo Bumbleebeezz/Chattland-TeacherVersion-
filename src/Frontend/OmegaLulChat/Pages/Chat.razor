@@ -1,10 +1,11 @@
 ﻿@page "/chat"
 @using Chattland.DataTransferContract.ChatContracts
 @using Chattland.DataTransferContract.DataTransferTypes
+@inject IHttpClientFactory _httpClientFactory
 
 <h3>Chat</h3>
 
-<EditForm Model="newChatMessage" OnValidSubmit="SendMessage">
+<EditForm Model="newChatMessage" >
     <DataAnnotationsValidator />
     <div class="form-group">
         <label>Name</label>
@@ -32,10 +33,18 @@
     public List<ChatMessageModel>? Messages = new();
     public ChatMessageModel newChatMessage = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        var client = _httpClientFactory.CreateClient("chatApi");
+        var response = await client.GetAsync("/messages/Lobby?start=0&count=0");
+
+
+        await base.OnInitializedAsync();
+    }
 
     public class ChatMessageModel : IChatMessage
     {
-        public MessageSenderDto SenderDto { get; set; }
+        public MessageSenderDto SenderDto { get; set; } = new ();
         public string Message { get; set; }
         public DateTime CreatedAt { get; set; }
     }
