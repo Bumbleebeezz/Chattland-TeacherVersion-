@@ -2,7 +2,7 @@
 
 namespace Chattland.Api.DataAccess.Entities;
 
-public class MessageSender : IMessageSender
+public class MessageSenderDocument : IMessageSender
 {
 	public string Name { get; set; }
 }

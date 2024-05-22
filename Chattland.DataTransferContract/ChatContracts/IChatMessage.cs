@@ -4,7 +4,7 @@ namespace Chattland.DataTransferContract.ChatContracts;
 
 public interface IChatMessage
 {
-    MessageSenderDto SenderDto { get; set; }
+    MessageSender Sender { get; set; }
     string Message { get; set; }
     DateTime CreatedAt { get; set; }
 }

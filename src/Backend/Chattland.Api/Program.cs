@@ -7,14 +7,24 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDataAccess();
 
+builder.Services
+	.AddCors(options =>
+		options.AddPolicy(
+			"OmegalulChat",
+			policy => policy.WithOrigins(["https://localhost:7053", "https://localhost:7194"])
+				.AllowAnyMethod()
+				.AllowAnyHeader()
+				.AllowCredentials()));
+
 var app = builder.Build();
 
-app.MapPost("/messages/{room}", async (IChatMessageRepository repo, ChatMessage message, string room) =>
+app.UseCors("OmegalulChat");
+
+app.MapPost("/messages/{room}", async (IChatMessageRepository repo, ChatMessageDocument message, string room) =>
 {
 	repo.SetCollectionName(room);
 	await repo.AddOneAsync(message);
 });
-
 
 app.MapGet("/messages/{room}", async (IChatMessageRepository repo,  string room, int start, int count) =>
 {

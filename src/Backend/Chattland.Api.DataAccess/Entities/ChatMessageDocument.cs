@@ -7,13 +7,11 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Chattland.Api.DataAccess.Entities;
 
-public class ChatMessage : IChatMessage, IEntity<string>
+public class ChatMessageDocument : IChatMessage, IEntity<string>
 {
     [BsonRepresentation(BsonType.ObjectId), BsonId]
     public string Id { get; set; }
-
-    //[JsonConverter(typeof(MessageSenderDto))] <- OM man vill ha SenderDto som en IMessageSender
-    public MessageSenderDto SenderDto { get; set; }
+    public MessageSender Sender { get; set; }
     public string Message { get; set; }
     public DateTime CreatedAt { get; set; }
 }
