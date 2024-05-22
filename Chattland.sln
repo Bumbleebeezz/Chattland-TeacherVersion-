@@ -9,15 +9,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{5153
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{BAD181A7-8717-4FC4-A4A3-C78017042F13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chattland.Api", "src\Backend\Chattland.Api\Chattland.Api.csproj", "{F2164815-BAD0-4D69-B900-C0A4CD969782}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chattland.Api", "src\Backend\Chattland.Api\Chattland.Api.csproj", "{F2164815-BAD0-4D69-B900-C0A4CD969782}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chattland.Api.DataAccess", "src\Backend\Chattland.Api.DataAccess\Chattland.Api.DataAccess.csproj", "{DCF2D73E-A593-4773-8E79-3C519D678653}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chattland.Api.DataAccess", "src\Backend\Chattland.Api.DataAccess\Chattland.Api.DataAccess.csproj", "{DCF2D73E-A593-4773-8E79-3C519D678653}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{E7678D87-9C49-499C-9F5D-343693A3019C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chattland.DataTransferContract", "Chattland.DataTransferContract\Chattland.DataTransferContract.csproj", "{35C4BC28-A67C-48C0-B955-4AD4841A2F8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chattland.DataTransferContract", "Chattland.DataTransferContract\Chattland.DataTransferContract.csproj", "{35C4BC28-A67C-48C0-B955-4AD4841A2F8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chattland.CommonInterfaces", "Chattland.CommonInterfaces\Chattland.CommonInterfaces.csproj", "{9906CA4F-AAC3-4B1D-884A-98733EEAED08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chattland.CommonInterfaces", "Chattland.CommonInterfaces\Chattland.CommonInterfaces.csproj", "{9906CA4F-AAC3-4B1D-884A-98733EEAED08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OmegaLulChat", "src\Frontend\OmegaLulChat\OmegaLulChat.csproj", "{8F4FB5B9-F65D-47D5-B785-05E8127C5046}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{9906CA4F-AAC3-4B1D-884A-98733EEAED08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9906CA4F-AAC3-4B1D-884A-98733EEAED08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9906CA4F-AAC3-4B1D-884A-98733EEAED08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F4FB5B9-F65D-47D5-B785-05E8127C5046}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F4FB5B9-F65D-47D5-B785-05E8127C5046}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F4FB5B9-F65D-47D5-B785-05E8127C5046}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F4FB5B9-F65D-47D5-B785-05E8127C5046}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +59,7 @@ Global
 		{E7678D87-9C49-499C-9F5D-343693A3019C} = {12328063-E510-4DEF-9894-22F56F5AD02E}
 		{35C4BC28-A67C-48C0-B955-4AD4841A2F8E} = {E7678D87-9C49-499C-9F5D-343693A3019C}
 		{9906CA4F-AAC3-4B1D-884A-98733EEAED08} = {E7678D87-9C49-499C-9F5D-343693A3019C}
+		{8F4FB5B9-F65D-47D5-B785-05E8127C5046} = {BAD181A7-8717-4FC4-A4A3-C78017042F13}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EA72852F-7A53-494F-9BC3-D0053A4C2424}

@@ -16,7 +16,7 @@ app.MapPost("/messages/{room}", async (IChatMessageRepository repo, ChatMessage 
 });
 
 
-app.MapGet("/messages/{room}", async (IChatMessageRepository repo,string room, int start, int count) =>
+app.MapGet("/messages/{room}", async (IChatMessageRepository repo,  string room, int start, int count) =>
 {
 	repo.SetCollectionName(room);
 	return await repo.GetManyAsync(start, count);

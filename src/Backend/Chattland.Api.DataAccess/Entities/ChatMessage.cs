@@ -12,8 +12,8 @@ public class ChatMessage : IChatMessage, IEntity<string>
     [BsonRepresentation(BsonType.ObjectId), BsonId]
     public string Id { get; set; }
 
-    //[JsonConverter(typeof(MessageSender))] <- OM man vill ha Sender som en IMessageSender
-    public MessageSenderDto Sender { get; set; }
+    //[JsonConverter(typeof(MessageSenderDto))] <- OM man vill ha SenderDto som en IMessageSender
+    public MessageSenderDto SenderDto { get; set; }
     public string Message { get; set; }
     public DateTime CreatedAt { get; set; }
 }
