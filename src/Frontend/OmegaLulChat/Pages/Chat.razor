@@ -65,15 +65,18 @@
     protected override async Task OnInitializedAsync()
     {
         await GetMessages();
-        _hubConnection = 
+        _hubConnection =
             new HubConnectionBuilder()
                 .WithUrl("https://localhost:7194/hubs/Chat")
                 .Build();
 
-        _hubConnection.On<ChatMessageModel>("SendMessage", (message) =>
+        _hubConnection.On<ChatMessageRequest>("SendMessage", (message) =>
         {
-            Messages.Add(message);
-            StateHasChanged();
+            if (message.Room.Equals(Room))
+            {
+                Messages.Add(message.ChatMessage);
+                StateHasChanged();
+            }
         });
 
         await _hubConnection.StartAsync();
@@ -83,7 +86,7 @@
 
     public class ChatMessageModel : IChatMessage
     {
-        public MessageSenderDto SenderDto { get; set; } = new ();
+        public MessageSenderDto SenderDto { get; set; } = new();
         [MinLength(1)]
         public string Message { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -98,8 +101,8 @@
     private async Task Callback()
     {
         newChatMessage.CreatedAt = DateTime.UtcNow;
-        var message = new ChatMessageRequest() {ChatMessage = newChatMessage, Room = Room};
-        await _hubConnection.SendAsync("SendMessage", message);
+        var message = new ChatMessageRequest() { ChatMessage = newChatMessage, Room = Room };
+        await _hubConnection.SendAsync($"SendMessage", message);
     }
 
 }
