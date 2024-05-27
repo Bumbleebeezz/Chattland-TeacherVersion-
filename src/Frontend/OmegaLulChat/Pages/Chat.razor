@@ -30,28 +30,44 @@
 </div>
 
 @code {
+
     [Parameter]
-    public string Room { get; set; }
+    public string Room
+    {
+        get => _room;
+        set
+        {
+            _room = value;
+            GetMessages();
+        }
+    }
+
+    private async Task GetMessages()
+    {
+        var client = _httpClientFactory.CreateClient("chatApi");
+        var response = await client.GetAsync($"/messages/{Room}?start=0&count=0");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var messages = await response.Content.ReadFromJsonAsync<ChatMessageModel[]>();
+            Messages.Clear();
+            Messages.AddRange(messages ?? []);
+            StateHasChanged();
+        }
+    }
 
     public List<ChatMessageModel> Messages = new();
     public ChatMessageModel newChatMessage = new();
 
     private HubConnection _hubConnection;
+    private string _room;
 
     protected override async Task OnInitializedAsync()
     {
-        var client = _httpClientFactory.CreateClient("chatApi");
-        var response = await client.GetAsync("/messages/Lobby?start=0&count=0");
-
-        if (response.IsSuccessStatusCode)
-        {
-            var messages = await response.Content.ReadFromJsonAsync<ChatMessageModel[]>();
-            Messages.AddRange(messages ?? []);
-        }
-
+        await GetMessages();
         _hubConnection = 
             new HubConnectionBuilder()
-                .WithUrl(client.BaseAddress + "hubs/Chat")
+                .WithUrl("https://localhost:7194/hubs/Chat")
                 .Build();
 
         _hubConnection.On<ChatMessageModel>("SendMessage", (message) =>
@@ -73,10 +89,17 @@
         public DateTime CreatedAt { get; set; }
     }
 
+    public class ChatMessageRequest
+    {
+        public ChatMessageModel ChatMessage { get; set; }
+        public string Room { get; set; }
+    }
+
     private async Task Callback()
     {
         newChatMessage.CreatedAt = DateTime.UtcNow;
-        await _hubConnection.SendAsync("SendMessage", newChatMessage);
+        var message = new ChatMessageRequest() {ChatMessage = newChatMessage, Room = Room};
+        await _hubConnection.SendAsync("SendMessage", message);
     }
 
 }

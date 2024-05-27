@@ -6,9 +6,16 @@ namespace Chattland.Api.Hubs;
 
 public class ChatHub(IChatMessageRepository repo) : Hub
 {
-    public async Task SendMessage(ChatMessage message)
+    public async Task SendMessage(ChatMessageRequest message)
     {
-        await repo.AddOneAsync(message);
+        repo.SetCollectionName(message.Room);
+        await repo.AddOneAsync(message.ChatMessage);
         await Clients.All.SendAsync("SendMessage", message);
     }
+}
+
+public class ChatMessageRequest
+{
+    public ChatMessage ChatMessage { get; set; }
+    public string Room { get; set; }
 }
