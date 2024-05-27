@@ -1,10 +1,12 @@
-﻿@using Chattland.DataTransferContract.ChatContracts
+﻿@using System.ComponentModel.DataAnnotations
+@using Chattland.DataTransferContract.ChatContracts
 @using Chattland.DataTransferContract.DataTransferTypes
+@using Microsoft.AspNetCore.SignalR.Client
 @inject IHttpClientFactory HttpClientFactory
 
 <h3>@Room</h3>
 
-<EditForm Model="newChatMessage" >
+<EditForm Model="newChatMessage" OnValidSubmit="SendMessage">
     <DataAnnotationsValidator />
     <div class="form-group">
         <label>Name</label>
@@ -22,7 +24,7 @@
         <li class="card bg-gradient border-3">
             <label class="card-header text-primary text-lg-start">@message.Sender.Name</label>
             <p class="card-body ">@message.Message</p>
-            <label class="card-footer text-primary text-lg-end">@message.CreatedAt.ToLocalTime().ToString("HH:mm")</label>
+            <label class="card-footer text-primary text-lg-end">@message.CreatedAt.ToString("HH:mm")</label>
         </li>
     </Virtualize>
 </div>
@@ -48,8 +50,23 @@
     public ChatMessageModel newChatMessage = new();
     private string _room = string.Empty;
 
+    public HubConnection hubConnection;
+
     protected override async Task OnInitializedAsync()
     {
+        var client = HttpClientFactory.CreateClient("chatApi");
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(client.BaseAddress + "hubs/ChatHub")
+            .Build();
+
+        hubConnection.On<ChatMessageModel>("SendMessage", (message) =>
+        {
+            Messages?.Add(message);
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync(); 
+        client.Dispose();
         await GetMessages();
 
         await base.OnInitializedAsync();
@@ -72,7 +89,16 @@
     public class ChatMessageModel : IChatMessage
     {
         public MessageSender Sender { get; set; } = new MessageSender();
+        [MinLength(1)]
         public string Message { get; set; }
         public DateTime CreatedAt { get; set; }
     }
+
+    private async Task SendMessage(EditContext obj)
+    {
+        newChatMessage.CreatedAt = DateTime.UtcNow;
+        await hubConnection.SendAsync("SendMessage", newChatMessage);
+        newChatMessage.Message = string.Empty;
+    }
+
 }

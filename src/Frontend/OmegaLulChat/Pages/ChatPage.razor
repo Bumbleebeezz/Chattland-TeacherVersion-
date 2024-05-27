@@ -1,10 +1,11 @@
 ﻿@page "/chat"
+@using Chattland.DataTransferContract.DataTransferTypes
 @inject IHttpClientFactory HttpClientFactory
 <h2>ChatPage</h2>
 <ul>
     <Virtualize Items="Rooms">
         <li>
-            <button @onclick="()=>Callback(context)">
+            <button class="btn btn-info" @onclick="()=>Callback(context)">
                 @context
             </button>
         </li>
@@ -20,7 +21,6 @@
     protected override async Task OnInitializedAsync()
     {
         var client = HttpClientFactory.CreateClient("chatApi");
-
         var response = await client.GetAsync("messages/rooms");
 
         if (response.IsSuccessStatusCode)
@@ -34,7 +34,6 @@
     private void Callback(string room)
     {
         SelectedRoom = room;
-        StateHasChanged();
     }
 
 }

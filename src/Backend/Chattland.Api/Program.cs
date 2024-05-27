@@ -16,6 +16,9 @@ builder.Services
 				.AllowAnyHeader()
 				.AllowCredentials()));
 
+
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 app.UseCors("OmegalulChat");
@@ -36,5 +39,8 @@ app.MapGet("/messages/rooms", async (IChatMessageRepository repo) =>
 {
 	return await repo.GetRoomNames();
 });
+
+
+app.MapHub<ChatHub>("/hubs/ChatHub");
 
 app.Run();
