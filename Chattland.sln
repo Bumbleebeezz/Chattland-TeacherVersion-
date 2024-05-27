@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chattland.DataTransferContr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chattland.CommonInterfaces", "Chattland.CommonInterfaces\Chattland.CommonInterfaces.csproj", "{9906CA4F-AAC3-4B1D-884A-98733EEAED08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OmegaLulChat", "src\Frontend\OmegaLulChat\OmegaLulChat.csproj", "{8F4FB5B9-F65D-47D5-B785-05E8127C5046}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OmegaLulChat", "src\Frontend\OmegaLulChat\OmegaLulChat.csproj", "{8F4FB5B9-F65D-47D5-B785-05E8127C5046}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,38 @@
+﻿@page "/chat"
+@inject IHttpClientFactory HttpClientFactory
+<h3>ChatPage</h3>
+
+<ul class="list-group">
+    <Virtualize Items="Rooms">
+        <li class="list-group-item">
+            <button class="btn btn-info m-1" @onclick="() => SelectedRoom = context">
+                @context
+            </button>
+        </li>
+    </Virtualize>
+</ul>
+
+<Chat Room="@SelectedRoom"></Chat>
+
+@code {
+
+    public List<string> Rooms { get; set; } = [];
+
+    public string SelectedRoom { get; set; } = "Lobby";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = HttpClientFactory.CreateClient("chatApi");
+
+        var response = await client.GetAsync("messages/rooms");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var rooms = await response.Content.ReadFromJsonAsync<string[]>();
+            Rooms.AddRange(rooms ?? []);
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+}
