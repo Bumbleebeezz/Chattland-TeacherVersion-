@@ -1,7 +1,8 @@
 using Chattland.Api.DataAccess;
 using Chattland.Api.DataAccess.Entities;
-using Chattland.DataTransferContract.DataTransferTypes;
 using Microsoft.AspNetCore.SignalR;
+
+namespace Chattland.Api;
 
 public class ChatHub(IChatMessageRepository repo) : Hub
 {
