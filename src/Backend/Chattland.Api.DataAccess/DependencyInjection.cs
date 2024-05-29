@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Chattland.Api.DataAccess.Auth;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Chattland.Api.DataAccess;
 
@@ -8,6 +10,7 @@ public static class DependencyInjection
 	{
 		services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
 
+		
 		return services;
 	}
 }

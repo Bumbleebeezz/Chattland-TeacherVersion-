@@ -1,25 +1,35 @@
 ﻿@page "/chat"
+@using Microsoft.AspNetCore.Authorization
 @inject IHttpClientFactory HttpClientFactory
 <h3>ChatPage</h3>
+@attribute [Authorize(Roles = "User")]
 
-<ul class="list-group">
-    <Virtualize Items="Rooms">
-        <li class="list-group-item">
-            <button class="btn btn-info m-1" @onclick="() => SelectedRoom = context">
-                @context
-            </button>
-        </li>
-    </Virtualize>
-</ul>
+<AuthorizeView Roles="User">
+    <NotAuthorized>
+        <h1>BUUUUU</h1>
+    </NotAuthorized>
+    <Authorized>
+        
+        <ul class="list-group">
+            <Virtualize Items="Rooms" Context="room">
+                <li class="list-group-item">
+                    <button class="btn btn-info m-1" @onclick="() => SelectedRoom = room">
+                        @room
+                    </button>
+                </li>
+            </Virtualize>
+        </ul>
 
-<hr />
-<h3>New Room:</h3>
-<InputText @bind-Value="NewRoom"></InputText>
-<button class="btn btn-secondary" @onclick="() => Rooms.Add(NewRoom)">Add Room</button>
-<hr />
+        <hr />
+        <h3>New Room:</h3>
+        <InputText @bind-Value="NewRoom"></InputText>
+        <button class="btn btn-secondary" @onclick="() => Rooms.Add(NewRoom)">Add Room</button>
+        <hr />
 
-<Chat Room="@SelectedRoom"></Chat>
+        <Chat Room="@SelectedRoom"></Chat>
 
+    </Authorized>
+</AuthorizeView>
 @code {
 
     public List<string> Rooms { get; set; } = [];
