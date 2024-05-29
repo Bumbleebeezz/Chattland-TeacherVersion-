@@ -69,7 +69,6 @@
             new HubConnectionBuilder()
                 .WithUrl("https://localhost:7194/hubs/Chat")
                 .Build();
-
         _hubConnection.On<ChatMessageRequest>("SendMessage", (message) =>
         {
             if (message.Room.Equals(Room))

@@ -12,11 +12,19 @@
     </Virtualize>
 </ul>
 
+<hr />
+<h3>New Room:</h3>
+<InputText @bind-Value="NewRoom"></InputText>
+<button class="btn btn-secondary" @onclick="() => Rooms.Add(NewRoom)">Add Room</button>
+<hr />
+
 <Chat Room="@SelectedRoom"></Chat>
 
 @code {
 
     public List<string> Rooms { get; set; } = [];
+
+    public string NewRoom { get; set; }
 
     public string SelectedRoom { get; set; } = "Lobby";
 
