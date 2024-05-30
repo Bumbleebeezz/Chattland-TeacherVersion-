@@ -62,6 +62,7 @@ app.UseCors("OmegaLulChat");
 app.UseAuthentication();
 app.UseAuthorization();
 
+//Todo: Denna endpoint används för att logga ut användaren.
 app.MapPost("/logout", async (SignInManager<ChattlandUser> signInManager, object empty) =>
 {
 	if (empty is not null)
@@ -122,6 +123,7 @@ app.MapGet("/messages/rooms", async (IChatMessageRepository repo) =>
 	return await repo.GetRoomNames();
 }).RequireAuthorization(policyBuilder => policyBuilder.RequireRole("User"));
 
+//Todo: Lagt till Authorize för att kräva inloggning för att ansluta till chatten
 app.MapHub<ChatHub>("/hubs/Chat").RequireAuthorization();
 
 app.Run();
