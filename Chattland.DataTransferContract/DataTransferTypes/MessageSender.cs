@@ -2,7 +2,7 @@
 
 namespace Chattland.DataTransferContract.DataTransferTypes;
 
-public class MessageSenderDto : IMessageSender
+public class MessageSender : IMessageSender
 {
     public string Name { get; set; }
 }

@@ -7,12 +7,12 @@ namespace Chattland.Api.DataAccess.Auth;
 
 public class ChattlandAuthDbContext 
 	: IdentityDbContext<ChattlandUser, ChattlandRole, string,
-	IdentityUserClaim<string>, ChattlandUserRole, IdentityUserLogin<string>,
-	IdentityRoleClaim<string>, IdentityUserToken<string>>
+		IdentityUserClaim<string>, ChattlandUserRole, IdentityUserLogin<string>,
+		IdentityRoleClaim<string>, IdentityUserToken<string>>
 {
 
 	public ChattlandAuthDbContext(DbContextOptions<ChattlandAuthDbContext> options)
-	: base(options)
+		: base(options)
 	{
 		
 	}

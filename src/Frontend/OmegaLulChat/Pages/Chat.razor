@@ -1,107 +1,28 @@
-﻿@using System.ComponentModel.DataAnnotations
-@using Chattland.DataTransferContract.ChatContracts
-@using Chattland.DataTransferContract.DataTransferTypes
+﻿@using Chattland.DataTransferContract.DataTransferTypes
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.SignalR.Client
+@using OmegaLulChat.Auth
 @inject IHttpClientFactory _httpClientFactory
+@inject AuthenticationStateProvider _authenticationStateProvider
+@attribute [Authorize(Roles = "User")]
 
 <h3>@Room</h3>
 
-<EditForm Model="newChatMessage" OnValidSubmit="Callback">
+<EditForm Model="_newChatMessage" OnValidSubmit="Callback">
     <DataAnnotationsValidator />
     <div class="form-group">
-        <label>Name</label>
-        <InputText class="form-control" @bind-Value="newChatMessage.SenderDto.Name"></InputText>
-    </div>
-    <div class="form-group">
         <label>Message</label>
-        <InputText class="form-control" @bind-Value="newChatMessage.Message"></InputText>
+        <InputText class="form-control" @bind-Value="_newChatMessage.Message"></InputText>
     </div>
     <button class="btn btn-primary" type="submit">Send Message</button>
 </EditForm>
 <hr />
 <div class="col">
-    <Virtualize Items="Messages.OrderByDescending(m=>m.CreatedAt).ToList()" Context="message">
+    <Virtualize Items="_messages.OrderByDescending(m=>m.CreatedAt).ToList()" Context="message">
         <li class="card bg-gradient border-3">
-            <label class="card-header text-primary text-lg-start">@message.SenderDto.Name</label>
+            <label class="card-header text-primary text-lg-start">@message.Sender.Name</label>
             <p class="card-body ">@message.Message</p>
             <label class="card-footer text-primary text-lg-end">@message.CreatedAt.ToLocalTime().ToString("HH:mm")</label>
         </li>
     </Virtualize>
 </div>
-
-@code {
-
-    [Parameter]
-    public string Room
-    {
-        get => _room;
-        set
-        {
-            _room = value;
-            GetMessages();
-        }
-    }
-
-    private async Task GetMessages()
-    {
-        var client = _httpClientFactory.CreateClient("chatApi");
-        var response = await client.GetAsync($"/messages/{Room}?start=0&count=0");
-
-        if (response.IsSuccessStatusCode)
-        {
-            var messages = await response.Content.ReadFromJsonAsync<ChatMessageModel[]>();
-            Messages.Clear();
-            Messages.AddRange(messages ?? []);
-            StateHasChanged();
-        }
-    }
-
-    public List<ChatMessageModel> Messages = new();
-    public ChatMessageModel newChatMessage = new();
-
-    private HubConnection _hubConnection;
-    private string _room;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await GetMessages();
-        _hubConnection =
-            new HubConnectionBuilder()
-                .WithUrl("https://localhost:7194/hubs/Chat")
-                .Build();
-        _hubConnection.On<ChatMessageRequest>("SendMessage", (message) =>
-        {
-            if (message.Room.Equals(Room))
-            {
-                Messages.Add(message.ChatMessage);
-                StateHasChanged();
-            }
-        });
-
-        await _hubConnection.StartAsync();
-
-        await base.OnInitializedAsync();
-    }
-
-    public class ChatMessageModel : IChatMessage
-    {
-        public MessageSenderDto SenderDto { get; set; } = new();
-        [MinLength(1)]
-        public string Message { get; set; }
-        public DateTime CreatedAt { get; set; }
-    }
-
-    public class ChatMessageRequest
-    {
-        public ChatMessageModel ChatMessage { get; set; }
-        public string Room { get; set; }
-    }
-
-    private async Task Callback()
-    {
-        newChatMessage.CreatedAt = DateTime.UtcNow;
-        var message = new ChatMessageRequest() { ChatMessage = newChatMessage, Room = Room };
-        await _hubConnection.SendAsync($"SendMessage", message);
-    }
-
-}

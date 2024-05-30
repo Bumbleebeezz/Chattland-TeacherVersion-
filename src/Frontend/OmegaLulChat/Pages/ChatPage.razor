@@ -40,6 +40,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
         var client = HttpClientFactory.CreateClient("chatApi");
 
         var response = await client.GetAsync("messages/rooms");
@@ -49,8 +50,6 @@
             var rooms = await response.Content.ReadFromJsonAsync<string[]>();
             Rooms.AddRange(rooms ?? []);
         }
-
-        await base.OnInitializedAsync();
     }
 
 }

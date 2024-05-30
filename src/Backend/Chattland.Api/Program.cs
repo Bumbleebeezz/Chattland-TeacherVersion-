@@ -6,6 +6,8 @@ using Chattland.Api.DataAccess.Entities;
 using Chattland.Api.Hubs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using Chattland.DataTransferContract.DataTransferTypes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,24 +62,65 @@ app.UseCors("OmegaLulChat");
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapPost("/logout", async (SignInManager<ChattlandUser> signInManager, object empty) =>
+{
+	if (empty is not null)
+	{
+		await signInManager.SignOutAsync();
+
+		return Results.Ok();
+	}
+
+	return Results.Unauthorized();
+}).RequireAuthorization();
+
 app.UseHttpsRedirection();
+
+//Todo: Denna endpoint används för att hämta tillgängliga roller när claims skapas.
+app.MapGet("/roles", (ClaimsPrincipal user) =>
+{
+	if (user.Identity is not null && user.Identity.IsAuthenticated)
+	{
+		var identity = (ClaimsIdentity)user.Identity;
+		var roles = identity.FindAll(identity.RoleClaimType)
+			.Select(c =>
+				new
+				{
+					c.Issuer,
+					c.OriginalIssuer,
+					c.Type,
+					c.Value,
+					c.ValueType
+				});
+
+		return TypedResults.Json(roles);
+	}
+
+	return Results.Unauthorized();
+}).RequireAuthorization();
 
 app.MapPost("/messages/{room}", async (IChatMessageRepository repo, ChatMessage message, string room) =>
 {
+	var newMessage = new ChatMessageDocument
+	{
+		Message = message.Message,
+		Sender = message.Sender,
+		CreatedAt = DateTime.Now
+	};
 	repo.SetCollectionName(room);
-	await repo.AddOneAsync(message);
-}).RequireAuthorization();
+	await repo.AddOneAsync(newMessage);
+}).RequireAuthorization(policyBuilder => policyBuilder.RequireRole("User"));
 
 app.MapGet("/messages/{room}", async (IChatMessageRepository repo,  string room, int start, int count) =>
 {
 	repo.SetCollectionName(room);
 	return await repo.GetManyAsync(start, count);
-}).RequireAuthorization();
+}).RequireAuthorization(policyBuilder => policyBuilder.RequireRole("User"));
 
 app.MapGet("/messages/rooms", async (IChatMessageRepository repo) =>
 {
 	return await repo.GetRoomNames();
-}).RequireAuthorization();
+}).RequireAuthorization(policyBuilder => policyBuilder.RequireRole("User"));
 
 app.MapHub<ChatHub>("/hubs/Chat").RequireAuthorization();
 

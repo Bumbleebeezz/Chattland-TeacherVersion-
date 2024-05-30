@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components.Authorization;
 using OmegaLulChat.Auth.Models;
@@ -103,10 +104,12 @@ public class CookieAuthenticationStateProvider : AuthenticationStateProvider, IA
 					new(ClaimTypes.Email, userInfo.Email)
 				};
 
+				//Todo: Här fick vi null ref exception då vi inte instansierade Claims i UserModel
 				claims.AddRange(
 					userInfo.Claims.Where(c => c.Key != ClaimTypes.Name && c.Key != ClaimTypes.Email)
 						.Select(c => new Claim(c.Key, c.Value)));
 
+				//Todo: Denna endpoint används för att hämta tillgängliga roller när claims skapas. Den saknades i vår kod.
 				var rolesResponse = await _httpClient.GetAsync("roles");
 
 				rolesResponse.EnsureSuccessStatusCode();
@@ -165,13 +168,17 @@ public class CookieAuthenticationStateProvider : AuthenticationStateProvider, IA
 
 	public async Task LogoutAsync()
 	{
-		throw new NotImplementedException();
+		//Todo: Denna endpoint används för att logga ut användaren.
+		const string Empty = "{}";
+		var emptyContent = new StringContent(Empty, Encoding.UTF8, "application/json");
+		await _httpClient.PostAsync("logout", emptyContent);
+		NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
 	}
-
 
 	public async Task<bool> CheckAuthenticatedAsync()
 	{
 		await GetAuthenticationStateAsync();
 		return _authenticated;
 	}
+
 }

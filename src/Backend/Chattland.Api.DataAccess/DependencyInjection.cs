@@ -1,6 +1,4 @@
-﻿using Chattland.Api.DataAccess.Auth;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Chattland.Api.DataAccess;
 

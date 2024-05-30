@@ -6,5 +6,6 @@ public class UserModel
 
 	public bool IsEmailConfirmed { get; set; }
 
-	public Dictionary<string, string> Claims { get; set; }
+	//Todo: Denna var den stora boven. den instansierades inte så när claims skulle läggas till så kastades ett null ref exception detta fångades av vår try/catch men syntes då inte
+	public Dictionary<string, string> Claims { get; set; } = [];
 }

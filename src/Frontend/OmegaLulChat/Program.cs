@@ -14,7 +14,6 @@ builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped<AuthenticationStateProvider, CookieAuthenticationStateProvider>();
 
-
 builder.Services.AddScoped(
 	sp => (IAccountManagement)sp.GetRequiredService<AuthenticationStateProvider>());
 

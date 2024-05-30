@@ -1,5 +1,4 @@
 ﻿using Chattland.Api.DataAccess.Entities;
-using Chattland.DataTransferContract.ChatContracts;
 using MongoDB.Driver;
 
 namespace Chattland.Api.DataAccess;
@@ -15,9 +14,9 @@ public class ChatMessageRepository : IChatMessageRepository
         _collectionName = "Lobby";
     }
 
-    public async Task<ChatMessage> GetByIdAsync(string id)
+    public async Task<ChatMessageDocument> GetByIdAsync(string id)
     {
-        var collection = _database.GetCollection<ChatMessage>(_collectionName);
+        var collection = _database.GetCollection<ChatMessageDocument>(_collectionName);
         var messages = await collection.FindAsync(id);
         var message = messages.FirstOrDefault();
 
@@ -30,17 +29,17 @@ public class ChatMessageRepository : IChatMessageRepository
     /// <param name="start"></param>
     /// <param name="count">Count set to 0 get all remaining messages</param>
     /// <returns>Collection of messages in specified range</returns>
-    public async Task<IEnumerable<ChatMessage>> GetManyAsync(int start, int count)
+    public async Task<IEnumerable<ChatMessageDocument>> GetManyAsync(int start, int count)
     {
-        var collection = _database.GetCollection<ChatMessage>(_collectionName);
+        var collection = _database.GetCollection<ChatMessageDocument>(_collectionName);
         var messages = await collection.Find(_=> true).Skip(start).Limit(count).ToListAsync();
         return messages;
     }
 
-    public async Task AddOneAsync(ChatMessage item)
+    public async Task AddOneAsync(ChatMessageDocument item)
     {
         var collection = 
-            _database.GetCollection<ChatMessage>(
+            _database.GetCollection<ChatMessageDocument>(
                 _collectionName, 
                 new MongoCollectionSettings()
                 {

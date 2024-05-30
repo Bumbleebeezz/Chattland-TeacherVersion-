@@ -11,4 +11,5 @@ public interface IAccountManagement
 	public Task<AuthResponseModel> RegisterAsync(string email, string password);
 
 	public Task<bool> CheckAuthenticatedAsync();
+
 }
