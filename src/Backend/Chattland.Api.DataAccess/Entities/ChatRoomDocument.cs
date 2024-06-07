@@ -6,9 +6,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Chattland.Api.DataAccess.Entities;
 
-public class ChatMessageDocument : BaseDocument, IChatMessage
+public class ChatRoomDocument : BaseDocument, IChatRoom
 {
-    public MessageSender Sender { get; set; }
-    public string Message { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public string Name { get; set; }
+    public ICollection<ChatParticipant> Participants { get; set; }
+    public DateTime LastMessageSent { get; set; }
 }

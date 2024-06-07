@@ -11,6 +11,10 @@ public partial class Chat
 {
     private string _room;
 
+    private List<ChatMessage> _messages = new();
+    private ChatMessage _newChatMessage = new() { Sender = new MessageSender() };
+    private HubConnection _hubConnection;
+
     [Parameter]
     public string Room
     {
@@ -35,11 +39,6 @@ public partial class Chat
             StateHasChanged();
         }
     }
-
-    private List<ChatMessage> _messages = new();
-    private ChatMessage _newChatMessage = new() {Sender = new MessageSender()};
-    private HubConnection _hubConnection;
-
     protected override async Task OnInitializedAsync()
     {
         await GetMessages();

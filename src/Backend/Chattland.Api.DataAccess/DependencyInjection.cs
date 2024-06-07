@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Chattland.Api.DataAccess.Repositories;
+using Chattland.Api.DataAccess.Repositories.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Chattland.Api.DataAccess;
 
